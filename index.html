@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOIV Studio의 Discord Bot Dashboard가 제작 중입니다</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <script>
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.documentElement.classList.add('dark');
+            }
+        });
+    </script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900 text-center">
+    <button onclick="toggleDarkMode()" class="absolute top-1 right-1 p-2 bg-gray-200 dark:bg-gray-700 rounded-lg shadow-md">
+        🌗
+    </button>
+    <div class="p-8 bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-200">🚧 공사 중 🚧</h1>
+        <p class="mt-4 text-gray-600 dark:text-gray-400">현재 Discord Bot Dashboard를 제작 중입니다. 곧 돌아오겠습니다!</p>
+    </div>
+</body>
+</html>

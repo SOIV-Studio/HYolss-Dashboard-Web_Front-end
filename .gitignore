@@ -1,0 +1,32 @@
+# 의존성
+node_modules
+package-lock.json
+yarn.lock
+
+# 빌드 출력
+dist
+build
+
+# 로그
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 환경 변수
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 편집기 설정
+.vscode
+.idea
+*.swp
+*.swo
+
+# 운영체제 파일
+.DS_Store
+Thumbs.db
