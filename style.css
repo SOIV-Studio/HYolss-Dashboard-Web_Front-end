@@ -1,0 +1,259 @@
+.dashboard-soiv {
+  background-color: #f7f7fb;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.dashboard-soiv .div {
+  background-color: #f7f7fb;
+  width: 100%; /* 고정 너비 대신 100%로 변경 */
+  height: 100%; /* 고정 높이 대신 100%로 변경 */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-soiv .frame {
+  position: relative;
+  width: 90%; /* 반응형으로 변경 */
+  max-width: 500px; /* 최대 너비 설정 */
+  height: auto; /* 높이를 자동으로 조정 */
+  min-height: 500px; /* 최소 높이 설정 */
+  background-color: #ebebf1;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 1px 1px 1px #0000001a, inset -1px -1px 1px #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px; /* 패딩 추가 */
+}
+
+.dashboard-soiv .text-wrapper {
+  position: relative; /* 절대 위치에서 상대 위치로 변경 */
+  top: auto; /* 위치 자동 조정 */
+  left: auto; /* 위치 자동 조정 */
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  font-size: 16px;
+  letter-spacing: -0.40px;
+  line-height: 22.4px;
+  text-align: center;
+  width: 100%; /* 너비 100%로 설정 */
+  max-width: 312px; /* 최대 너비 설정 */
+  margin-bottom: 20px; /* 마진 추가 */
+}
+
+.dashboard-soiv .frame-wrapper {
+  position: relative; /* 절대 위치에서 상대 위치로 변경 */
+  width: 215px;
+  height: 38px;
+  top: auto; /* 위치 자동 조정 */
+  left: auto; /* 위치 자동 조정 */
+  background-color: #5865f2;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px; /* 마진 추가 */
+}
+
+.dashboard-soiv .frame-wrapper:hover {
+  background-color: #4752c4;
+}
+
+.dashboard-soiv .frame-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100%;
+  padding: 0 17px;
+}
+
+.dashboard-soiv .discord-symbol-white {
+  width: 26px;
+  height: 20px;
+}
+
+.dashboard-soiv .text-wrapper-2 {
+  font-family: "Pretendard", "Pretendard-Bold", sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: -0.40px;
+  line-height: 22.4px;
+  white-space: nowrap;
+}
+
+.dashboard-soiv .frame-3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative; /* 절대 위치에서 상대 위치로 변경 */
+  top: auto; /* 위치 자동 조정 */
+  left: auto; /* 위치 자동 조정 */
+}
+
+.dashboard-soiv .checkbox-container {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.dashboard-soiv .checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.dashboard-soiv .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+}
+
+.dashboard-soiv .checkbox:checked ~ .checkmark {
+  background-color: #5865f2;
+  border-color: #5865f2;
+}
+
+.dashboard-soiv .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.dashboard-soiv .checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+.dashboard-soiv .checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dashboard-soiv .p {
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: -0.35px;
+  line-height: 19.6px;
+  white-space: nowrap;
+}
+
+.dashboard-soiv .frame-4 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 20px 0;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.dashboard-soiv .text-wrapper-3 {
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  font-size: 12px;
+  letter-spacing: 0;
+  line-height: normal;
+  white-space: nowrap;
+}
+
+.dashboard-soiv .ellipse {
+  width: 3px;
+  height: 3px;
+  background-color: #000000;
+  border-radius: 1.5px;
+}
+
+.dashboard-soiv .frame-5 {
+  position: absolute;
+  width: 100%;
+  height: 80px;
+  top: 0;
+  left: 0;
+  background-color: transparent; /* 배경색 제거 */
+}
+
+.dashboard-soiv .text-wrapper-4 {
+  position: absolute;
+  top: 26px;
+  left: 32px;
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  font-size: 18px;
+  letter-spacing: -0.45px;
+  line-height: 25.2px;
+  white-space: nowrap;
+}
+
+/* 반응형 미디어 쿼리 추가 */
+@media screen and (max-width: 768px) {
+  .dashboard-soiv .text-wrapper-4 {
+    font-size: 16px;
+    left: 16px;
+    top: 20px;
+  }
+  
+  .dashboard-soiv .frame {
+    min-height: 400px;
+  }
+  
+  .dashboard-soiv .text-wrapper {
+    font-size: 14px;
+  }
+  
+  .dashboard-soiv .frame-wrapper {
+    width: 200px;
+  }
+  
+  .dashboard-soiv .text-wrapper-2 {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-soiv .frame-4 {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dashboard-soiv .ellipse {
+    display: none;
+  }
+  
+  .dashboard-soiv .text-wrapper-4 {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+    left: 0;
+  }
+}
