@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="style.css" />
     <script>
-      // 체크박스 상태 관리를 위한 스크립트
       document.addEventListener('DOMContentLoaded', function() {
         // 저장된 체크박스 상태 불러오기
         const rememberLogin = localStorage.getItem('rememberLogin');
@@ -28,10 +27,28 @@
         loginButton.addEventListener('click', function() {
           // 실제 디스코드 OAuth 로그인 URL로 연결
           window.location.href = "https://discord.com/oauth2/authorize?client_id=888061096441819166&response_type=code&redirect_uri=https%3A%2F%2Fdashboard.soiv-studio.xyz%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+email";
-          // window.location.href = "https://discord.com/oauth2/authorize?client_id=888061096441819166&response_type=code&redirect_uri=http%3A%2F%2F127.0.0.1%3A8080%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+email";
+        });
 
-          // 데모 목적으로 알림만 표시
-          // alert('디스코드 로그인 페이지로 이동합니다.');
+        // 다크 모드 토글 기능
+        const themeSwitch = document.getElementById('theme-switch');
+
+        // 저장된 테마 설정 불러오기
+        const currentTheme = localStorage.getItem('theme');
+
+        if (currentTheme === 'dark') {
+          document.body.classList.add('dark-mode');
+          themeSwitch.checked = true;
+        }
+
+        // 테마 스위치 이벤트 리스너
+        themeSwitch.addEventListener('change', function() {
+          if (this.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+          } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+          }
         });
       });
     </script>
@@ -61,6 +78,15 @@
           </div>
         </div>
         
+        <!-- 테마 스위치 추가 -->
+        <div class="theme-switch-container">
+          <span class="theme-label">Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="theme-switch">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
         <div class="frame-4">
           <div class="text-wrapper-3">© 2025 SOIV Studio</div>
           <div class="ellipse"></div>
@@ -69,6 +95,7 @@
           <a href="https://kileu-network.notion.site/Privacy-Policy-1b3dffb97eda801ca879cb98557267a9?pvs=4" class="text-wrapper-3">Privacy</a>
           <div class="ellipse"></div>
           <div class="text-wrapper-3">Legal Notice</div>
+        </div>
         </div>
       </div>
     </div>
