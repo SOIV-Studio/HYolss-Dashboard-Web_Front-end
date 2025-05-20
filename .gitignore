@@ -1,4 +1,7 @@
+# 제외 폴더
 legacy code
+server-home
+Server-pick
 
 # 의존성
 node_modules
