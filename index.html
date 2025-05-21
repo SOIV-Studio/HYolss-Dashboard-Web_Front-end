@@ -17,7 +17,7 @@
       </span>
       <button class="announcement-close" id="announcement-close">&times;</button>
     </div>
-
+    
     <div class="dashboard-main">
       <div class="div">
         <!-- 헤더 -->
@@ -26,13 +26,27 @@
             HYolss Dashboard
             <span class="beta-label">BETA</span>
           </div>
-          <!-- 사용자 프로필 정보 (로그인 후 표시) -->
+          <!-- 사용자 프로필 정보 (로그인 후 표시) 수정 -->
           <div class="user-profile">
-            <div class="user-avatar" id="user-avatar"></div>
+            <div class="user-avatar" id="user-avatar">
+              <!-- 프로필 이미지는 JS에서 동적으로 추가됨 -->
+            </div>
             <div class="user-name" id="user-name"></div>
-            <button class="logout-button" id="logout-button">Logout</button>
+            
+            <!-- 드롭다운 메뉴 추가 -->
+            <div class="profile-dropdown" id="profile-dropdown">
+              <div class="dropdown-item">
+                <span>프로필 설정</span>
+              </div>
+              <div class="dropdown-item">
+                <span>알림 설정</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item" id="logout-button">
+                <span>로그아웃</span>
+              </div>
+            </div>
           </div>
-        </div>
         
         <!-- 로그인 화면 (초기 화면) -->
         <div class="frame" id="login-container">
