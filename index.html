@@ -7,66 +7,33 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdnjs.cloudflare.com/ajax/libs/pretendard/1.3.9/static/pretendard.min.css" />
     <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="style.css" />
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        // 저장된 체크박스 상태 불러오기
-        const rememberLogin = localStorage.getItem('rememberLogin');
-        const checkbox = document.getElementById('remember-login');
-        
-        if (rememberLogin === 'true') {
-          checkbox.checked = true;
-        }
-        
-        // 체크박스 상태 변경 시 저장
-        checkbox.addEventListener('change', function() {
-          localStorage.setItem('rememberLogin', this.checked);
-        });
-        
-        // 디스코드 로그인 버튼 클릭 이벤트
-        const loginButton = document.querySelector('.frame-wrapper');
-        loginButton.addEventListener('click', function() {
-          // 실제 디스코드 OAuth 로그인 URL로 연결
-          window.location.href = "https://discord.com/oauth2/authorize?client_id=888061096441819166&response_type=code&redirect_uri=https%3A%2F%2Fdashboard.soiv-studio.xyz%2Fapi%2Fauth%2Fcallback%2Fdiscord&scope=identify+guilds+email";
-        });
-
-        // 다크 모드 토글 기능
-        const themeSwitch = document.getElementById('theme-switch');
-
-        // 저장된 테마 설정 불러오기
-        const currentTheme = localStorage.getItem('theme');
-
-        if (currentTheme === 'dark') {
-          document.body.classList.add('dark-mode');
-          themeSwitch.checked = true;
-        }
-
-        // 테마 스위치 이벤트 리스너
-        themeSwitch.addEventListener('change', function() {
-          if (this.checked) {
-            document.body.classList.add('dark-mode');
-            localStorage.setItem('theme', 'dark');
-          } else {
-            document.body.classList.remove('dark-mode');
-            localStorage.setItem('theme', 'light');
-          }
-        });
-      });
-    </script>
     <title>HYolss Dashboard</title>
   </head>
   <body>
     <div class="dashboard-main">
       <div class="div">
+        <!-- 헤더 -->
         <div class="frame-5">
           <div class="text-wrapper-4">HYolss Dashboard</div>
+          <!-- 사용자 프로필 정보 (로그인 후 표시) -->
+          <div class="user-profile">
+            <div class="user-avatar" id="user-avatar"></div>
+            <div class="user-name" id="user-name"></div>
+            <button class="logout-button" id="logout-button">로그아웃</button>
+          </div>
         </div>
         
-        <div class="frame">
+        <!-- 로그인 화면 (초기 화면) -->
+        <div class="frame" id="login-container">
           <p class="text-wrapper">Log in With Discord to access the dashboard.</p>
-          <div class="frame-wrapper">
+          <div class="frame-wrapper" id="discord-login-button">
             <div class="frame-2">
               <img class="discord-symbol-white" src="Assets/Discord-Symbol-White.svg" alt="Discord Logo" />
               <div class="text-wrapper-2">Log in with Discord</div>
+            </div>
+            <!-- 로그인 로딩 애니메이션 -->
+            <div class="login-loading">
+              <div class="loading-spinner"></div>
             </div>
           </div>
           <div class="frame-3">
@@ -75,6 +42,155 @@
               <span class="checkmark"></span>
             </label>
             <p class="p">Automatically log in next time</p>
+          </div>
+        </div>
+        
+        <!-- 서버 선택 화면 (로그인 후 표시) -->
+        <div class="server-container" id="server-container" style="display: none;">
+          <h2 class="server-title">서버 선택</h2>
+          <p class="server-description">봇이 초대된 서버 중에서 관리할 서버를 선택하세요.</p>
+          
+          <div class="server-list" id="server-list">
+            <!-- 로딩 애니메이션 -->
+            <div class="loading-container">
+              <div class="loading-animation">
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+                <div class="loading-bar"></div>
+              </div>
+              <p class="loading-text">서버 목록을 불러오는 중...</p>
+            </div>
+            
+            <!-- 서버 목록 컨텐츠 -->
+            <div class="server-list-content" id="server-list-content">
+              <!-- 여기에 서버 목록이 동적으로 추가됩니다 -->
+            </div>
+          </div>
+        </div>
+        
+        <!-- 대시보드 컨테이너 (서버 선택 후 표시) -->
+        <div class="dashboard-container" id="dashboard-container" style="display: none;">
+          <!-- 대시보드 내용은 서버별로 동적으로 표시됩니다 -->
+          <div class="dashboard-header">
+            <h2 class="dashboard-title" id="server-name-title">서버 이름</h2>
+            <div class="dashboard-nav">
+              <button class="nav-button active" data-section="overview">개요</button>
+              <button class="nav-button" data-section="commands">명령어</button>
+              <button class="nav-button" data-section="settings">설정</button>
+              <button class="nav-button" data-section="logs">로그</button>
+            </div>
+          </div>
+          
+          <div class="dashboard-content">
+            <!-- 각 섹션은 데이터에 따라 동적으로 표시됩니다 -->
+            <div class="dashboard-section active" id="overview-section">
+              <div class="overview-stats">
+                <div class="stat-card">
+                  <div class="stat-title">멤버 수</div>
+                  <div class="stat-value" id="member-count">--</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-title">명령어 사용량</div>
+                  <div class="stat-value" id="command-usage">--</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-title">활성 기능</div>
+                  <div class="stat-value" id="active-features">--</div>
+                </div>
+              </div>
+              
+              <div class="quick-actions">
+                <h3>빠른 작업</h3>
+                <div class="action-buttons">
+                  <button class="action-button" id="welcome-setup">환영 메시지 설정</button>
+                  <button class="action-button" id="auto-roles">자동 역할 관리</button>
+                  <button class="action-button" id="moderation-setup">관리 시스템 설정</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dashboard-section" id="commands-section">
+              <h3>명령어 관리</h3>
+              <div class="commands-list" id="commands-list">
+                <!-- 명령어 목록이 동적으로 표시됩니다 -->
+                <div class="loading-text">명령어 목록을 불러오는 중...</div>
+              </div>
+            </div>
+            
+            <div class="dashboard-section" id="settings-section">
+              <h3>봇 설정</h3>
+              <div class="settings-form">
+                <div class="settings-group">
+                  <h4>기본 설정</h4>
+                  <div class="setting-item">
+                    <label for="prefix-setting">명령어 접두사</label>
+                    <input type="text" id="prefix-setting" placeholder="!" />
+                  </div>
+                  <div class="setting-item">
+                    <label for="language-setting">언어</label>
+                    <select id="language-setting">
+                      <option value="ko">한국어</option>
+                      <option value="en">English</option>
+                      <option value="ja">日本語</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="settings-group">
+                  <h4>기능 활성화</h4>
+                  <div class="setting-item checkbox">
+                    <input type="checkbox" id="welcome-module" />
+                    <label for="welcome-module">환영 메시지</label>
+                  </div>
+                  <div class="setting-item checkbox">
+                    <input type="checkbox" id="moderation-module" />
+                    <label for="moderation-module">관리 시스템</label>
+                  </div>
+                  <div class="setting-item checkbox">
+                    <input type="checkbox" id="auto-role-module" />
+                    <label for="auto-role-module">자동 역할</label>
+                  </div>
+                  <div class="setting-item checkbox">
+                    <input type="checkbox" id="logging-module" />
+                    <label for="logging-module">로그 기록</label>
+                  </div>
+                </div>
+                
+                <button class="save-button" id="save-settings">설정 저장</button>
+              </div>
+            </div>
+            
+            <div class="dashboard-section" id="logs-section">
+              <h3>로그 기록</h3>
+              <div class="logs-filter">
+                <select id="log-type-filter">
+                  <option value="all">모든 로그</option>
+                  <option value="commands">명령어</option>
+                  <option value="moderation">관리</option>
+                  <option value="members">멤버</option>
+                </select>
+                <input type="date" id="log-date-filter" />
+                <button id="apply-log-filter">필터 적용</button>
+              </div>
+              <div class="logs-table-container">
+                <table class="logs-table" id="logs-table">
+                  <thead>
+                    <tr>
+                      <th>시간</th>
+                      <th>유형</th>
+                      <th>사용자</th>
+                      <th>내용</th>
+                    </tr>
+                  </thead>
+                  <tbody id="logs-body">
+                    <!-- 로그 데이터가 동적으로 표시됩니다 -->
+                    <tr>
+                      <td colspan="4" class="loading-text">로그를 불러오는 중...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -87,6 +203,7 @@
           </label>
         </div>
         
+        <!-- 푸터 -->
         <div class="frame-4">
           <div class="text-wrapper-3">© 2025 SOIV Studio</div>
           <div class="ellipse"></div>
@@ -96,8 +213,12 @@
           <div class="ellipse"></div>
           <div class="text-wrapper-3">Legal Notice</div>
         </div>
-        </div>
       </div>
     </div>
+
+    <!-- 메인 자바스크립트 파일 -->
+    <script src="index.js"></script>
+    <!-- 대시보드 관련 자바스크립트 -->
+    <script src="dashboard.js"></script>
   </body>
 </html>
