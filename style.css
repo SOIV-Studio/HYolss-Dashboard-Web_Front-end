@@ -647,8 +647,48 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   gap: 12px;
-  /* 초기에는 숨김 처리 (로그인 전) */
+  position: relative;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 180px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
   display: none;
+  z-index: 100;
+}
+
+.profile-dropdown.active {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 10px 15px;
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #505050;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dropdown-item:hover {
+  background-color: rgba(88, 101, 242, 0.1);
+  color: #5865f2;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background-color: #ebebf1;
+  margin: 5px 0;
 }
 
 .user-avatar {
@@ -801,4 +841,9 @@ body.dark-mode .dropdown-item:hover {
 
 body.dark-mode .dropdown-divider {
   background-color: #3a3a44;
+}
+
+/* 로딩 애니메이션 관련 수정 */
+.loading-container.hidden {
+  display: none;
 }
