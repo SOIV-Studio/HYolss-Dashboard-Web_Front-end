@@ -311,13 +311,25 @@ document.addEventListener('DOMContentLoaded', function() {
         // 현재 서버 선택 상태 추가
         serverItem.classList.add('selected');
         
-        // 서버 페이지로 이동 (약간의 지연으로 선택 효과 보이기)
-        setTimeout(() => {
-          // 실제 서버 대시보드 페이지 URL
-          window.location.href = `/${server.id}/home`;
-        }, 300);
-      });
-      
+        // 대시보드 컨테이너로 직접 전환 (라우팅 대신 컨테이너 표시 전환)
+        const dashboardContainer = document.getElementById('dashboard-container');
+        const serverNameTitle = document.getElementById('server-name-title');
+        
+        if (dashboardContainer && serverNameTitle) {
+          // 서버 컨테이너 숨기기
+          serverContainer.style.display = 'none';
+          // 대시보드 표시
+          dashboardContainer.style.display = 'block';
+          // 서버 이름 설정
+          serverNameTitle.textContent = server.name;
+
+        // 추가: 서버 정보 불러오기 함수 호출 (이 함수는 dashboard.js에 구현 필요)
+        // 함수가 존재하는지 확인 후 호출
+        if (typeof loadServerDashboard === 'function') {
+          loadServerDashboard(server.id);
+        }
+      }
+    });
       serverListContent.appendChild(serverItem);
     });
   }
