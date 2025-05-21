@@ -90,11 +90,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
   });
   
-  // 프로필 드롭다운 초기 상태 설정 (로그인 전에는 숨김)
-  if (profileDropdown) {
-    profileDropdown.style.display = 'none';
-  }
-
   // 프로필 아바타 클릭 시 드롭다운 토글
   if (userAvatar) {
     userAvatar.addEventListener('click', function(e) {
@@ -191,12 +186,6 @@ document.addEventListener('DOMContentLoaded', function() {
       userAvatar.style.fontFamily = 'Pretendard, sans-serif';
       userAvatar.style.fontWeight = 'bold';
     }
-    
-    // 프로필 드롭다운 표시 설정
-    if (profileDropdown) {
-      profileDropdown.style.display = ''; // 기본 표시 상태로 복원
-    }
-
     // 프로필 드롭다운 설정
     setupProfileDropdown();
   }
@@ -208,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fetch(`${API_URL}/api/guilds`, {
       method: 'GET',
-      credentials: 'include'
+      credentials: 'include' // 중요: 쿠키를 포함하여 요청
     })
     .then(response => {
       if (!response.ok) {
@@ -218,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       // 서버 목록 표시
-      displayServerList(data.guilds || []); // 빈 배열 기본값 추가
+      displayServerList(data.guilds);
       
       // 로딩 상태 제거
       serverList.classList.remove('loading');
@@ -227,11 +216,10 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => {
       console.error('서버 목록 가져오기 오류:', error);
-      // 오류 메시지와 함께 명확한 안내 제공
+      // 오류 메시지 표시
       serverListContent.innerHTML = `
         <div class="error-message">
           <p>서버 목록을 불러오는데 실패했습니다.</p>
-          <p>오류 세부 정보: ${error.message}</p>
           <button class="retry-button">다시 시도</button>
         </div>
       `;
@@ -311,25 +299,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // 현재 서버 선택 상태 추가
         serverItem.classList.add('selected');
         
-        // 대시보드 컨테이너로 직접 전환 (라우팅 대신 컨테이너 표시 전환)
-        const dashboardContainer = document.getElementById('dashboard-container');
-        const serverNameTitle = document.getElementById('server-name-title');
-        
-        if (dashboardContainer && serverNameTitle) {
-          // 서버 컨테이너 숨기기
-          serverContainer.style.display = 'none';
-          // 대시보드 표시
-          dashboardContainer.style.display = 'block';
-          // 서버 이름 설정
-          serverNameTitle.textContent = server.name;
-
-        // 추가: 서버 정보 불러오기 함수 호출 (이 함수는 dashboard.js에 구현 필요)
-        // 함수가 존재하는지 확인 후 호출
-        if (typeof loadServerDashboard === 'function') {
-          loadServerDashboard(server.id);
-        }
-      }
-    });
+        // 서버 페이지로 이동 (약간의 지연으로 선택 효과 보이기)
+        setTimeout(() => {
+          // 실제 서버 대시보드 페이지 URL
+          window.location.href = `/${server.id}/home`;
+        }, 300);
+      });
+      
       serverListContent.appendChild(serverItem);
     });
   }
