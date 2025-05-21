@@ -1,0 +1,94 @@
+/* 반응형 미디어 쿼리 */
+@media screen and (max-width: 768px) {
+  .dashboard-main .text-wrapper-4 {
+    font-size: 16px;
+    left: 16px;
+    top: 20px;
+  }
+  
+  .dashboard-main .frame {
+    min-height: 400px;
+  }
+  
+  .dashboard-main .text-wrapper {
+    font-size: 14px;
+  }
+  
+  .dashboard-main .frame-wrapper {
+    width: 200px;
+  }
+  
+  .dashboard-main .text-wrapper-2 {
+    font-size: 14px;
+  }
+  
+  .server-container {
+    max-width: 95%;
+    padding: 20px;
+  }
+  
+  .server-list-content {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  
+  .server-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+  
+  .server-name {
+    font-size: 14px;
+  }
+  
+  .beta-label {
+    font-size: 8px;
+    padding: 1px 4px;
+    top: -8px;
+  }
+  
+  .loading-bar {
+    width: 6px;
+    height: 20px;
+  }
+  
+  .loading-text {
+    font-size: 12px;
+  }
+  
+  .loading-container {
+    height: 120px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-main .frame-4 {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .dashboard-main .ellipse {
+    display: none;
+  }
+  
+  .dashboard-main .text-wrapper-4 {
+    font-size: 14px;
+    width: 100%;
+    text-align: center;
+    left: 0;
+  }
+  
+  .server-list-content {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 8px;
+  }
+  
+  .server-title {
+    font-size: 20px;
+  }
+  
+  .server-description {
+    font-size: 14px;
+  }
+}

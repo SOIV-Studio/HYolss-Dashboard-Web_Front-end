@@ -1,0 +1,150 @@
+/* Discord 로그인 버튼 */
+.dashboard-main .frame-wrapper {
+  position: relative;
+  width: 215px;
+  height: 38px;
+  top: auto;
+  left: auto;
+  background-color: #5865f2;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.dashboard-main .frame-wrapper:hover {
+  background-color: #4752c4;
+}
+
+.dashboard-main .frame-2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 100%;
+  padding: 0 17px;
+}
+
+.dashboard-main .discord-symbol-white {
+  width: 26px;
+  height: 20px;
+}
+
+.dashboard-main .text-wrapper-2 {
+  font-family: "Pretendard", "Pretendard-Bold", sans-serif;
+  font-weight: 700;
+  color: #ffffff;
+  font-size: 16px;
+  letter-spacing: -0.40px;
+  line-height: 22.4px;
+  white-space: nowrap;
+}
+
+/* 체크박스 스타일 */
+.dashboard-main .frame-3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  top: auto;
+  left: auto;
+}
+
+.dashboard-main .checkbox-container {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.dashboard-main .checkbox {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.dashboard-main .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+}
+
+.dashboard-main .checkbox:checked ~ .checkmark {
+  background-color: #5865f2;
+  border-color: #5865f2;
+}
+
+.dashboard-main .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.dashboard-main .checkbox:checked ~ .checkmark:after {
+  display: block;
+}
+
+.dashboard-main .checkbox-container .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.dashboard-main .p {
+  font-family: "Pretendard", "Pretendard-Medium", sans-serif;
+  font-weight: 500;
+  color: #000000;
+  font-size: 14px;
+  letter-spacing: -0.35px;
+  line-height: 19.6px;
+  white-space: nowrap;
+}
+
+/* 로그인 로딩 애니메이션 */
+.login-loading {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(88, 101, 242, 0.8);
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.frame-wrapper.loading .login-loading {
+  display: flex;
+}
+
+.frame-wrapper.loading .frame-2 {
+  opacity: 0;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: #ffffff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
