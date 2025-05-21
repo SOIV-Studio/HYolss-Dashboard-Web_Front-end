@@ -65,14 +65,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // displayUserProfile 함수 끝부분에 추가
-  function displayUserProfile(user) {
-    // 기존 코드 유지...
-    
-    // 프로필 드롭다운 설정
-    setupProfileDropdown();
-  }
-
   // 로그인 상태 체크
   checkAuthStatus();
   
@@ -194,6 +186,8 @@ document.addEventListener('DOMContentLoaded', function() {
       userAvatar.style.fontFamily = 'Pretendard, sans-serif';
       userAvatar.style.fontWeight = 'bold';
     }
+    // 프로필 드롭다운 설정
+    setupProfileDropdown();
   }
   
   // 서버 목록 가져오기 함수
@@ -203,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fetch(`${API_URL}/api/guilds`, {
       method: 'GET',
-      credentials: 'include' // 중요: 쿠키를 포함하여 요청
+      credentials: 'include'
     })
     .then(response => {
       if (!response.ok) {
@@ -213,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(data => {
       // 서버 목록 표시
-      displayServerList(data.guilds);
+      displayServerList(data.guilds || []); // 빈 배열 기본값 추가
       
       // 로딩 상태 제거
       serverList.classList.remove('loading');
@@ -222,10 +216,11 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => {
       console.error('서버 목록 가져오기 오류:', error);
-      // 오류 메시지 표시
+      // 오류 메시지와 함께 명확한 안내 제공
       serverListContent.innerHTML = `
         <div class="error-message">
           <p>서버 목록을 불러오는데 실패했습니다.</p>
+          <p>오류 세부 정보: ${error.message}</p>
           <button class="retry-button">다시 시도</button>
         </div>
       `;
