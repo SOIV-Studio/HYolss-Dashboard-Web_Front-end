@@ -90,6 +90,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
   });
   
+  // 프로필 드롭다운 초기 상태 설정 (로그인 전에는 숨김)
+  if (profileDropdown) {
+    profileDropdown.style.display = 'none';
+  }
+
   // 프로필 아바타 클릭 시 드롭다운 토글
   if (userAvatar) {
     userAvatar.addEventListener('click', function(e) {
@@ -186,6 +191,12 @@ document.addEventListener('DOMContentLoaded', function() {
       userAvatar.style.fontFamily = 'Pretendard, sans-serif';
       userAvatar.style.fontWeight = 'bold';
     }
+    
+    // 프로필 드롭다운 표시 설정
+    if (profileDropdown) {
+      profileDropdown.style.display = ''; // 기본 표시 상태로 복원
+    }
+
     // 프로필 드롭다운 설정
     setupProfileDropdown();
   }
