@@ -7,7 +7,7 @@
     <link rel="stylesheet" as="style" crossorigin href="https://cdnjs.cloudflare.com/ajax/libs/pretendard/1.3.9/static/pretendard.min.css" />
     <link rel="stylesheet" href="globals.css" />
     <link rel="stylesheet" href="style.css" />
-    <title>HYolss Dashboard</title>
+    <title>HYolss Dashboard(Beta)</title>
   </head>
   <body>
     <div class="dashboard-main">
@@ -19,7 +19,7 @@
           <div class="user-profile">
             <div class="user-avatar" id="user-avatar"></div>
             <div class="user-name" id="user-name"></div>
-            <button class="logout-button" id="logout-button">로그아웃</button>
+            <button class="logout-button" id="logout-button">Logout</button>
           </div>
         </div>
         
@@ -47,8 +47,8 @@
         
         <!-- 서버 선택 화면 (로그인 후 표시) -->
         <div class="server-container" id="server-container" style="display: none;">
-          <h2 class="server-title">서버 선택</h2>
-          <p class="server-description">봇이 초대된 서버 중에서 관리할 서버를 선택하세요.</p>
+          <h2 class="server-title">Select Server</h2>
+          <p class="server-description">Select the server you want to manage from the servers the bot has been invited to.</p>
           
           <div class="server-list" id="server-list">
             <!-- 로딩 애니메이션 -->
@@ -58,7 +58,7 @@
                 <div class="loading-bar"></div>
                 <div class="loading-bar"></div>
               </div>
-              <p class="loading-text">서버 목록을 불러오는 중...</p>
+              <p class="loading-text">Loading server list...</p>
             </div>
             
             <!-- 서버 목록 컨텐츠 -->
@@ -72,7 +72,7 @@
         <div class="dashboard-container" id="dashboard-container" style="display: none;">
           <!-- 대시보드 내용은 서버별로 동적으로 표시됩니다 -->
           <div class="dashboard-header">
-            <h2 class="dashboard-title" id="server-name-title">서버 이름</h2>
+            <h2 class="dashboard-title" id="server-name-title">Server name</h2>
             <div class="dashboard-nav">
               <button class="nav-button active" data-section="overview">개요</button>
               <button class="nav-button" data-section="commands">명령어</button>
@@ -205,7 +205,7 @@
         
         <!-- 푸터 -->
         <div class="frame-4">
-          <div class="text-wrapper-3">© 2025 SOIV Studio</div>
+          <div class="text-wrapper-3">© 2025 SOIV Studio, Palette Square Studio</div>
           <div class="ellipse"></div>
           <a href="https://kileu-network.notion.site/Terms-of-Service-1b3dffb97eda803c950bedf970b7e8f8?pvs=4" class="text-wrapper-3">Terms</a>
           <div class="ellipse"></div>
