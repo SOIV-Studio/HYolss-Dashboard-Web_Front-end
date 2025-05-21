@@ -17,6 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
   const profileDropdown = document.getElementById('profile-dropdown');
   const headerFrame = document.querySelector('.frame-5');
   
+  // 공지사항 배너 닫기 버튼
+  const closeBtn = document.getElementById('announcement-close');
+  const banner = document.getElementById('announcement-banner');
+
+  if (closeBtn && banner) {
+    closeBtn.addEventListener('click', () => {
+      banner.style.display = 'none';
+    });
+  }
+
   // 테마 설정 불러오기
   const currentTheme = localStorage.getItem('theme');
   if (currentTheme === 'dark') {
