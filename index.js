@@ -45,6 +45,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
+  // DOM 요소 초기화 후 이벤트 리스너 등록
+  function setupProfileDropdown() {
+    const userAvatar = document.getElementById('user-avatar');
+    const profileDropdown = document.getElementById('profile-dropdown');
+    
+    if (userAvatar && profileDropdown) {
+      userAvatar.addEventListener('click', function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
+        profileDropdown.classList.toggle('active');
+      });
+      
+      // 다른 곳 클릭 시 드롭다운 닫기
+      document.addEventListener('click', function() {
+        if (profileDropdown.classList.contains('active')) {
+          profileDropdown.classList.remove('active');
+        }
+      });
+    }
+  }
+
+  // displayUserProfile 함수 끝부분에 추가
+  function displayUserProfile(user) {
+    // 기존 코드 유지...
+    
+    // 프로필 드롭다운 설정
+    setupProfileDropdown();
+  }
+
   // 로그인 상태 체크
   checkAuthStatus();
   
@@ -93,7 +121,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 인증 상태 확인 함수
   function checkAuthStatus() {
-    // 쿠키가 있는지 확인하고 AJAX 요청 수행
+    // 자동 로그인이 체크되어 있는 경우에만 쿠키 확인
+    const rememberLogin = localStorage.getItem('rememberLogin') === 'true';
+    
+    if (!rememberLogin) {
+      // 자동 로그인이 체크되어 있지 않으면 로그인 화면 유지
+      return;
+    }
+
+    // 자동 로그인이 체크된 경우에만 쿠키가 있는지 확인하고 AJAX 요청 수행
     fetch(`${API_URL}/api/user`, {
       method: 'GET',
       credentials: 'include' // 중요: 쿠키를 포함하여 요청
@@ -162,6 +198,9 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 서버 목록 가져오기 함수
   function fetchServerList() {
+    // 로딩 표시
+    serverLoading.classList.remove('hidden');
+    
     fetch(`${API_URL}/api/guilds`, {
       method: 'GET',
       credentials: 'include' // 중요: 쿠키를 포함하여 요청
@@ -179,9 +218,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 로딩 상태 제거
       serverList.classList.remove('loading');
       // 로딩 애니메이션 숨기기
-      if (serverLoading) {
-        serverLoading.classList.add('hidden');
-      }
+      serverLoading.classList.add('hidden');
     })
     .catch(error => {
       console.error('서버 목록 가져오기 오류:', error);
@@ -198,10 +235,8 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // 로딩 상태 제거
       serverList.classList.remove('loading');
-      // 로딩 애니메이션 숨기기
-      if (serverLoading) {
-        serverLoading.classList.add('hidden');
-      }
+      // 로딩 애니메이션 확실히 숨기기
+      serverLoading.classList.add('hidden');
     });
   }
   
