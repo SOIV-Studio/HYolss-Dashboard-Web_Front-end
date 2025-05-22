@@ -4,7 +4,6 @@
   top: 20px;
   right: 32px;
   gap: 12px;
-  position: relative;
   /* 초기에는 프로필 숨김 */
   display: none !important;
 }
