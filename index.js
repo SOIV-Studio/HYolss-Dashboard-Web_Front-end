@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // 로그아웃 처리 함수 (중복 실행 방지)
   let isLoggingOut = false;
-  
+
   function handleLogout() {
     if (isLoggingOut) {
       console.log('이미 로그아웃 진행 중입니다.');
@@ -96,36 +96,209 @@ document.addEventListener('DOMContentLoaded', function() {
     
     isLoggingOut = true;
     
-    // 로그아웃 API 호출
-    fetch(`${API_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include'
-    })
-    .then(response => {
-      // 응답 상태와 상관없이 프론트엔드에서 로그아웃 처리
-      hideUserProfile();
+    // 즉시 UI 상태 업데이트
+    hideUserProfile();
+    
+    // 가능한 로그아웃 엔드포인트들 시도
+    const logoutEndpoints = [
+      '/auth/logout',
+      '/api/logout', 
+      '/api/auth/logout',
+      '/logout'
+    ];
+    
+    // 순차적으로 로그아웃 엔드포인트 시도
+    tryLogoutEndpoints(logoutEndpoints, 0);
+  }
+
+  // 여러 로그아웃 엔드포인트 순차 시도
+  async function tryLogoutEndpoints(endpoints, index) {
+    if (index >= endpoints.length) {
+      // 모든 엔드포인트 실패 시 강제 로그아웃
+      console.log('모든 로그아웃 엔드포인트 실패, 강제 로그아웃 실행');
+      forceLogout();
+      return;
+    }
+    
+    const endpoint = endpoints[index];
+    console.log(`로그아웃 시도: ${API_URL}${endpoint}`);
+    
+    try {
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
       
-      // 로컬 스토리지 정리 (필요한 경우)
-      if (!rememberLoginCheckbox.checked) {
-        localStorage.removeItem('authToken');
+      if (response.ok) {
+        console.log(`로그아웃 성공: ${endpoint}`);
+        completeLogout();
+        return;
+      } else if (response.status === 404) {
+        console.log(`엔드포인트 없음: ${endpoint}, 다음 시도`);
+        // 다음 엔드포인트 시도
+        tryLogoutEndpoints(endpoints, index + 1);
+        return;
+      } else {
+        console.log(`로그아웃 실패 (${response.status}): ${endpoint}`);
+      }
+    } catch (error) {
+      console.error(`로그아웃 요청 오류: ${endpoint}`, error);
+    }
+    
+    // 다음 엔드포인트 시도
+    tryLogoutEndpoints(endpoints, index + 1);
+  }
+
+  // 강제 로그아웃 (API 없이 클라이언트에서만 처리)
+  function forceLogout() {
+    console.log('강제 로그아웃 실행');
+    
+    // 1. 모든 로컬 데이터 정리
+    clearLocalData();
+    
+    // 2. 모든 쿠키 삭제
+    clearAllCookies();
+    
+    // 3. 브라우저 캐시 정리 시도
+    if ('caches' in window) {
+      caches.keys().then(names => {
+        names.forEach(name => {
+          caches.delete(name);
+        });
+      });
+    }
+    
+    // 4. 페이지 상태 리셋
+    resetToLoginState();
+    
+    // 5. 강제 새로고침 (캐시 무력화)
+    setTimeout(() => {
+      // 캐시 무력화를 위한 타임스탬프 추가
+      const timestamp = new Date().getTime();
+      window.location.href = `${window.location.origin}${window.location.pathname}?t=${timestamp}`;
+    }, 500);
+    
+    isLoggingOut = false;
+  }
+
+  // 로그아웃 완료 처리
+  function completeLogout() {
+    // 로컬 데이터 정리
+    clearLocalData();
+    
+    // 쿠키 정리
+    clearAllCookies();
+    
+    // 페이지 상태 리셋
+    resetToLoginState();
+    
+    // 새로고침
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+    
+    isLoggingOut = false;
+  }
+
+  // 개선된 쿠키 삭제 함수
+  function clearAllCookies() {
+    try {
+      // 현재 도메인의 모든 쿠키 가져오기
+      const cookies = document.cookie.split(";");
+      
+      // 가능한 모든 도메인과 경로 조합
+      const domains = [
+        '',  // 현재 도메인
+        window.location.hostname,
+        `.${window.location.hostname}`,
+        'bot-api.soiv-studio.xyz',
+        '.soiv-studio.xyz',
+        '.soiv-studio.xyz',
+        'localhost' // 개발 환경용
+      ];
+      
+      const paths = ['/', '/auth', '/api', '/auth/', '/api/'];
+      
+      cookies.forEach(cookie => {
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos).trim() : cookie.trim();
+        
+        if (name) {
+          // 기본 삭제
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+          
+          // 모든 도메인/경로 조합으로 삭제 시도
+          domains.forEach(domain => {
+            paths.forEach(path => {
+              if (domain) {
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}; domain=${domain}`;
+              }
+              document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=${path}`;
+            });
+          });
+          
+          // Secure 쿠키도 삭제 시도
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure`;
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; secure; samesite=none`;
+        }
+      });
+      
+      console.log('쿠키 정리 시도 완료');
+      
+      // 정리 후 남은 쿠키 확인
+      setTimeout(() => {
+        const remainingCookies = document.cookie;
+        if (remainingCookies) {
+          console.warn('삭제되지 않은 쿠키:', remainingCookies);
+        } else {
+          console.log('모든 쿠키 삭제 완료');
+        }
+      }, 100);
+      
+    } catch (error) {
+      console.error('쿠키 정리 오류:', error);
+    }
+  }
+
+  // 로컬 데이터 정리 함수 (확장)
+  function clearLocalData() {
+    try {
+      // localStorage 정리
+      const localStorageKeys = [
+        'authToken', 'accessToken', 'refreshToken', 'token',
+        'user', 'userProfile', 'discord_auth', 'session',
+        'discordUser', 'auth', 'login', 'authentication'
+      ];
+      
+      localStorageKeys.forEach(key => {
+        localStorage.removeItem(key);
+      });
+      
+      // sessionStorage 정리
+      const sessionStorageKeys = [
+        'authToken', 'user', 'discord_auth', 'session',
+        'discordUser', 'auth'
+      ];
+      
+      sessionStorageKeys.forEach(key => {
+        sessionStorage.removeItem(key);
+      });
+      
+      // 추가: 전체 스토리지 초기화 (극단적 방법)
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {
+        console.warn('스토리지 전체 초기화 실패:', e);
       }
       
-      // 페이지 새로고침
-      window.location.reload();
-    })
-    .catch(error => {
-      console.error('로그아웃 오류:', error);
-      
-      // 오류가 발생해도 프론트엔드에서 로그아웃 처리
-      hideUserProfile();
-      
-      // 페이지 새로고침
-      window.location.reload();
-    })
-    .finally(() => {
-      // 로그아웃 상태 초기화
-      isLoggingOut = false;
-    });
+      console.log('로컬 데이터 정리 완료');
+    } catch (error) {
+      console.error('로컬 데이터 정리 오류:', error);
+    }
   }
 
   // 로그인 상태 체크
@@ -155,29 +328,53 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 로그아웃 함수에 이 코드 추가
   function hideUserProfile() {
-    const userProfile = document.querySelector('.user-profile');
-    if (userProfile) {
-      userProfile.classList.remove('active');
-      userProfile.style.display = 'none';
-    }
-    
-    // 프로필 드롭다운도 숨김
-    const profileDropdown = document.getElementById('profile-dropdown');
-    if (profileDropdown) {
-      profileDropdown.style.display = 'none';
+    try {
+      const userProfile = document.querySelector('.user-profile');
+      if (userProfile) {
+        userProfile.classList.remove('active');
+        userProfile.style.display = 'none';
+      }
+      
+      // 프로필 드롭다운도 숨김
+      const profileDropdown = document.getElementById('profile-dropdown');
+      if (profileDropdown) {
+        profileDropdown.style.display = 'none';
+      }
+      
+      // 사용자 정보 초기화
+      const userName = document.getElementById('user-name');
+      const userAvatar = document.getElementById('user-avatar');
+      
+      if (userName) userName.textContent = '';
+      if (userAvatar) {
+        userAvatar.innerHTML = '';
+        userAvatar.style.backgroundColor = '';
+        userAvatar.textContent = '';
+      }
+      
+      console.log('사용자 프로필 숨김 완료');
+    } catch (error) {
+      console.error('사용자 프로필 숨김 오류:', error);
     }
   }
   
   // 인증 상태 확인 함수
   function checkAuthStatus() {
-    // 항상 인증 상태 확인 (자동 로그인 체크와 상관없이)
-    fetch(`${API_URL}/api/user`, {
+    // 강제로 캐시 무력화
+    const timestamp = new Date().getTime();
+    
+    fetch(`${API_URL}/api/user?t=${timestamp}`, {
       method: 'GET',
-      credentials: 'include'
+      credentials: 'include',
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      }
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('인증되지 않음');
+        throw new Error(`HTTP ${response.status}: 인증되지 않음`);
       }
       return response.json();
     })
@@ -185,12 +382,25 @@ document.addEventListener('DOMContentLoaded', function() {
       if (data.user) {
         showServerSelectionScreen();
         displayUserProfile(data.user);
+      } else {
+        throw new Error('사용자 데이터가 없습니다');
       }
     })
     .catch(error => {
-      console.log('인증 상태 확인 오류:', error);
+      console.log('인증 상태 확인 실패:', error);
+      resetToLoginState();
     });
   }
+
+  // 페이지 로드 시 강제 캐시 정리
+  window.addEventListener('load', function() {
+    // 브라우저 뒤로가기/앞으로가기 캐시 방지
+    window.addEventListener('pageshow', function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    });
+  });
   
   // 서버 선택 화면 표시 함수
   function showServerSelectionScreen() {
