@@ -1,9 +1,7 @@
 # 제외 폴더
 legacy code
 server-home
-Server-pick
 docs/To-Do.md
-locales
 
 # 의존성
 node_modules
