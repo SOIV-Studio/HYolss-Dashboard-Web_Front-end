@@ -14,15 +14,15 @@
     <link rel="stylesheet" href="style/profile.css">
     <link rel="stylesheet" href="style/animations.css">
     <link rel="stylesheet" href="style/responsive.css">
-    <!-- i18n 지원 예정 (한국어, 영어, 일본어) -->
+    <!-- i18n 지원 (한국어, 영어, 일본어) -->
     <script type="module" src="i18n.js"></script>
     <!-- 대시보드 사이트 이름 -->
-    <title>[Beta] HYolss Dashboard</title>
+    <title data-i18n="dashboard.title">[Beta] HYolss Dashboard</title>
   </head>
   <body>
     <!-- 공지 배너 -->
     <div class="announcement-banner" id="announcement-banner">
-      <span class="announcement-text">
+      <span class="announcement-text" data-i18n="beta.notice">
         🚧 현재는 테스트 중인 개발 버전입니다. 일부 기능이 작동하지 않을 수 있습니다.
       </span>
       <button class="announcement-close" id="announcement-close">&times;</button>
@@ -33,7 +33,7 @@
         <!-- 헤더 -->
         <div class="frame-5">
           <div class="text-wrapper-4">
-            HYolss Dashboard
+            <span data-i18n="dashboard.title">HYolss Dashboard</span>
             <span class="beta-label">BETA</span>
           </div>
           <!-- 사용자 프로필 정보 (로그인 후 표시) -->
@@ -46,14 +46,14 @@
             <!-- 드롭다운 메뉴 추가 -->
             <div class="profile-dropdown" id="profile-dropdown" style="display: none;">
               <div class="dropdown-item">
-                <span>프로필 설정</span>
+                <span data-i18n="profile.settings">프로필 설정</span>
               </div>
               <div class="dropdown-item">
-                <span>알림 설정</span>
+                <span data-i18n="notification.settings">알림 설정</span>
               </div>
               <div class="dropdown-divider"></div>
               <div class="dropdown-item" id="logout-button">
-                <span>로그아웃</span>
+                <span data-i18n="common.logout">로그아웃</span>
               </div>
             </div>
           </div>
@@ -61,11 +61,11 @@
         
         <!-- 로그인 화면 (초기 화면) -->
         <div class="frame" id="login-container">
-          <p class="text-wrapper">Log in With Discord to access the dashboard.</p>
+          <p class="text-wrapper" data-i18n="login.message">Log in With Discord to access the dashboard.</p>
           <div class="frame-wrapper" id="discord-login-button">
             <div class="frame-2">
               <img class="discord-symbol-white" src="Assets/Discord-Symbol-White.svg" alt="Discord Logo" />
-              <div class="text-wrapper-2">Log in with Discord</div>
+              <div class="text-wrapper-2" data-i18n="login.with.discord">Log in with Discord</div>
             </div>
             <!-- 로그인 로딩 애니메이션 -->
             <div class="login-loading">
@@ -77,14 +77,14 @@
               <input type="checkbox" class="checkbox" id="remember-login">
               <span class="checkmark"></span>
             </label>
-            <p class="p">Automatically log in next time</p>
+            <p class="p" data-i18n="login.remember">Automatically log in next time</p>
           </div>
         </div>
         
         <!-- 서버 선택 화면 (로그인 후 표시) -->
         <div class="server-container" id="server-container" style="display: none;">
-          <h2 class="server-title">Select Server</h2>
-          <p class="server-description">Select the server you want to manage from the servers the bot has been invited to.</p>
+          <h2 class="server-title" data-i18n="server.select">Select Server</h2>
+          <p class="server-description" data-i18n="server.description">Select the server you want to manage from the servers the bot has been invited to.</p>
           
           <!-- 서버 목록 컨테이너 -->
           <div class="server-list" id="server-list">
@@ -95,7 +95,7 @@
                 <div class="loading-bar"></div>
                 <div class="loading-bar"></div>
               </div>
-              <p class="loading-text">Loading server list...</p>
+              <p class="loading-text" data-i18n="server.loading">Loading server list...</p>
             </div>
             
             <!-- 서버 목록 컨텐츠 -->
@@ -111,10 +111,10 @@
           <div class="dashboard-header">
             <h2 class="dashboard-title" id="server-name-title">Server name</h2>
             <div class="dashboard-nav">
-              <button class="nav-button active" data-section="overview">개요</button>
-              <button class="nav-button" data-section="commands">명령어</button>
-              <button class="nav-button" data-section="settings">설정</button>
-              <button class="nav-button" data-section="logs">로그</button>
+              <button class="nav-button active" data-section="overview" data-i18n="nav.overview">개요</button>
+              <button class="nav-button" data-section="commands" data-i18n="nav.commands">명령어</button>
+              <button class="nav-button" data-section="settings" data-i18n="nav.settings">설정</button>
+              <button class="nav-button" data-section="logs" data-i18n="nav.logs">로그</button>
             </div>
           </div>
           
@@ -123,48 +123,48 @@
             <div class="dashboard-section active" id="overview-section">
               <div class="overview-stats">
                 <div class="stat-card">
-                  <div class="stat-title">멤버 수</div>
+                  <div class="stat-title" data-i18n="overview.members">멤버 수</div>
                   <div class="stat-value" id="member-count">--</div>
                 </div>
                 <div class="stat-card">
-                  <div class="stat-title">명령어 사용량</div>
+                  <div class="stat-title" data-i18n="overview.commands">명령어 사용량</div>
                   <div class="stat-value" id="command-usage">--</div>
                 </div>
                 <div class="stat-card">
-                  <div class="stat-title">활성 기능</div>
+                  <div class="stat-title" data-i18n="overview.features">활성 기능</div>
                   <div class="stat-value" id="active-features">--</div>
                 </div>
               </div>
               
               <div class="quick-actions">
-                <h3>빠른 작업</h3>
+                <h3 data-i18n="overview.quick">빠른 작업</h3>
                 <div class="action-buttons">
-                  <button class="action-button" id="welcome-setup">환영 메시지 설정</button>
-                  <button class="action-button" id="auto-roles">자동 역할 관리</button>
-                  <button class="action-button" id="moderation-setup">관리 시스템 설정</button>
+                  <button class="action-button" id="welcome-setup" data-i18n="overview.welcome">환영 메시지 설정</button>
+                  <button class="action-button" id="auto-roles" data-i18n="overview.roles">자동 역할 관리</button>
+                  <button class="action-button" id="moderation-setup" data-i18n="overview.moderation">관리 시스템 설정</button>
                 </div>
               </div>
             </div>
             
             <div class="dashboard-section" id="commands-section">
-              <h3>명령어 관리</h3>
+              <h3 data-i18n="commands.title">명령어 관리</h3>
               <div class="commands-list" id="commands-list">
                 <!-- 명령어 목록이 동적으로 표시됩니다 -->
-                <div class="loading-text">명령어 목록을 불러오는 중...</div>
+                <div class="loading-text" data-i18n="commands.loading">명령어 목록을 불러오는 중...</div>
               </div>
             </div>
             
             <div class="dashboard-section" id="settings-section">
-              <h3>봇 설정</h3>
+              <h3 data-i18n="settings.title">봇 설정</h3>
               <div class="settings-form">
                 <div class="settings-group">
-                  <h4>기본 설정</h4>
+                  <h4 data-i18n="settings.basic">기본 설정</h4>
                   <div class="setting-item">
-                    <label for="prefix-setting">명령어 접두사</label>
+                    <label for="prefix-setting" data-i18n="settings.prefix">명령어 접두사</label>
                     <input type="text" id="prefix-setting" placeholder="!" />
                   </div>
                   <div class="setting-item">
-                    <label for="language-setting">언어</label>
+                    <label for="language-setting" data-i18n="settings.language">언어</label>
                     <select id="language-setting">
                       <option value="ko">한국어</option>
                       <option value="en">English</option>
@@ -174,55 +174,55 @@
                 </div>
                 
                 <div class="settings-group">
-                  <h4>기능 활성화</h4>
+                  <h4 data-i18n="settings.features">기능 활성화</h4>
                   <div class="setting-item checkbox">
                     <input type="checkbox" id="welcome-module" />
-                    <label for="welcome-module">환영 메시지</label>
+                    <label for="welcome-module" data-i18n="settings.welcome">환영 메시지</label>
                   </div>
                   <div class="setting-item checkbox">
                     <input type="checkbox" id="moderation-module" />
-                    <label for="moderation-module">관리 시스템</label>
+                    <label for="moderation-module" data-i18n="settings.moderation">관리 시스템</label>
                   </div>
                   <div class="setting-item checkbox">
                     <input type="checkbox" id="auto-role-module" />
-                    <label for="auto-role-module">자동 역할</label>
+                    <label for="auto-role-module" data-i18n="settings.autorole">자동 역할</label>
                   </div>
                   <div class="setting-item checkbox">
                     <input type="checkbox" id="logging-module" />
-                    <label for="logging-module">로그 기록</label>
+                    <label for="logging-module" data-i18n="settings.logging">로그 기록</label>
                   </div>
                 </div>
                 
-                <button class="save-button" id="save-settings">설정 저장</button>
+                <button class="save-button" id="save-settings" data-i18n="settings.save">설정 저장</button>
               </div>
             </div>
             
             <div class="dashboard-section" id="logs-section">
-              <h3>로그 기록</h3>
+              <h3 data-i18n="logs.title">로그 기록</h3>
               <div class="logs-filter">
                 <select id="log-type-filter">
-                  <option value="all">모든 로그</option>
-                  <option value="commands">명령어</option>
-                  <option value="moderation">관리</option>
-                  <option value="members">멤버</option>
+                  <option value="all" data-i18n="logs.all">모든 로그</option>
+                  <option value="commands" data-i18n="logs.commands">명령어</option>
+                  <option value="moderation" data-i18n="logs.moderation">관리</option>
+                  <option value="members" data-i18n="logs.members">멤버</option>
                 </select>
                 <input type="date" id="log-date-filter" />
-                <button id="apply-log-filter">필터 적용</button>
+                <button id="apply-log-filter" data-i18n="logs.filter">필터 적용</button>
               </div>
               <div class="logs-table-container">
                 <table class="logs-table" id="logs-table">
                   <thead>
                     <tr>
-                      <th>시간</th>
-                      <th>유형</th>
-                      <th>사용자</th>
-                      <th>내용</th>
+                      <th data-i18n="logs.time">시간</th>
+                      <th data-i18n="logs.type">유형</th>
+                      <th data-i18n="logs.user">사용자</th>
+                      <th data-i18n="logs.content">내용</th>
                     </tr>
                   </thead>
                   <tbody id="logs-body">
                     <!-- 로그 데이터가 동적으로 표시됩니다 -->
                     <tr>
-                      <td colspan="4" class="loading-text">로그를 불러오는 중...</td>
+                      <td colspan="4" class="loading-text" data-i18n="logs.loading">로그를 불러오는 중...</td>
                     </tr>
                   </tbody>
                 </table>
@@ -233,7 +233,7 @@
         
         <!-- 테마 스위치 추가 -->
         <div class="theme-switch-container">
-          <span class="theme-label">Dark Mode</span>
+          <span class="theme-label" data-i18n="theme.dark">Dark Mode</span>
           <label class="switch">
             <input type="checkbox" id="theme-switch">
             <span class="slider"></span>
@@ -242,13 +242,13 @@
         
         <!-- 푸터 -->
         <div class="frame-4">
-          <div class="text-wrapper-3">© 2025 SOIV Studio, Palette Square Studio</div>
+          <div class="text-wrapper-3" data-i18n="footer.copyright">© 2025 SOIV Studio, Palette Square Studio</div>
           <div class="ellipse"></div>
-          <a href="https://kileu-network.notion.site/Terms-of-Service-1b3dffb97eda803c950bedf970b7e8f8?pvs=4" class="text-wrapper-3">Terms</a>
+          <a href="https://kileu-network.notion.site/Terms-of-Service-1b3dffb97eda803c950bedf970b7e8f8?pvs=4" class="text-wrapper-3" data-i18n="footer.terms">Terms</a>
           <div class="ellipse"></div>
-          <a href="https://kileu-network.notion.site/Privacy-Policy-1b3dffb97eda801ca879cb98557267a9?pvs=4" class="text-wrapper-3">Privacy</a>
+          <a href="https://kileu-network.notion.site/Privacy-Policy-1b3dffb97eda801ca879cb98557267a9?pvs=4" class="text-wrapper-3" data-i18n="footer.privacy">Privacy</a>
           <div class="ellipse"></div>
-          <div class="text-wrapper-3">Legal Notice</div>
+          <div class="text-wrapper-3" data-i18n="footer.legal">Legal Notice</div>
         </div>
       </div>
     </div>
