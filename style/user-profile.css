@@ -3,27 +3,44 @@
   position: absolute;
   top: 20px;
   right: 32px;
-  display: flex;
-  align-items: center;
   gap: 12px;
   position: relative;
+  /* 초기에는 프로필 숨김 */
+  display: none !important;
+}
+
+/* 로그인 후 프로필 표시 */
+.user-profile.active {
+  display: flex !important;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
 }
 
 .profile-dropdown {
   position: absolute;
-  top: 45px;
+  top: 100%;
   right: 0;
   width: 180px;
   background-color: #ffffff;
+  border: 1px solid #e1e5e9;
   border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 8px 0;
   display: none;
-  z-index: 100;
+  z-index: 1000;
+  min-width: 180px;
 }
 
 .profile-dropdown.active {
   display: block;
+}
+
+/* 다크모드에서 드롭다운 스타일 */
+.dark-mode .profile-dropdown {
+  background: #2c2c2c;
+  border-color: #444;
+  color: white;
 }
 
 .dropdown-item {
@@ -44,10 +61,23 @@
   color: #5865f2;
 }
 
+.dark-mode .dropdown-item {
+  color: white;
+}
+
+.dark-mode .dropdown-item:hover {
+  background-color: rgba(88, 101, 242, 0.2);
+  color: #7c8aff;
+}
+
 .dropdown-divider {
   height: 1px;
   background-color: #ebebf1;
   margin: 5px 0;
+}
+
+.dark-mode .dropdown-divider {
+  background-color: #555;
 }
 
 /* 이미지 비율 조정을 위한 스타일 */
@@ -77,6 +107,10 @@
   font-size: 16px;
 }
 
+.dark-mode .user-name {
+  color: white;
+}
+
 .logout-button {
   font-family: "Pretendard", "Pretendard-Medium", sans-serif;
   font-weight: 500;
@@ -93,6 +127,15 @@
 .logout-button:hover {
   color: #5865f2;
   background-color: rgba(88, 101, 242, 0.1);
+}
+
+.dark-mode .logout-button {
+  color: white;
+}
+
+.dark-mode .logout-button:hover {
+  color: #7c8aff;
+  background-color: rgba(88, 101, 242, 0.2);
 }
 
 /* 헤더 스타일 */
