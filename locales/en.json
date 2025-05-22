@@ -1,0 +1,86 @@
+{
+  "beta": {
+    "notice": "🚧 This is a development version under testing. Some features may not work properly."
+  },
+  "dashboard": {
+    "title": "HYolss Dashboard"
+  },
+  "profile": {
+    "settings": "Profile Settings"
+  },
+  "notification": {
+    "settings": "Notification Settings"
+  },
+  "common": {
+    "logout": "Logout"
+  },
+  "login": {
+    "message": "Log in with Discord to access the dashboard.",
+    "with": {
+      "discord": "Log in with Discord"
+    },
+    "remember": "Automatically log in next time"
+  },
+  "server": {
+    "select": "Select Server",
+    "description": "Select the server you want to manage from the servers the bot has been invited to.",
+    "loading": "Loading server list...",
+    "none": "You don't have any servers with management permissions.",
+    "invite": "Invite Bot",
+    "error": "Failed to load server list.",
+    "retry": "Retry"
+  },
+  "nav": {
+    "overview": "Overview",
+    "commands": "Commands",
+    "settings": "Settings",
+    "logs": "Logs"
+  },
+  "overview": {
+    "members": "Member Count",
+    "commands": "Command Usage",
+    "features": "Active Features",
+    "quick": "Quick Actions",
+    "welcome": "Setup Welcome Message",
+    "roles": "Manage Auto Roles",
+    "moderation": "Setup Moderation System"
+  },
+  "commands": {
+    "title": "Command Management",
+    "loading": "Loading commands list..."
+  },
+  "settings": {
+    "title": "Bot Settings",
+    "basic": "Basic Settings",
+    "prefix": "Command Prefix",
+    "language": "Language",
+    "features": "Feature Activation",
+    "welcome": "Welcome Message",
+    "moderation": "Moderation System",
+    "autorole": "Auto Role",
+    "logging": "Logging",
+    "save": "Save Settings"
+  },
+  "logs": {
+    "title": "Logs",
+    "all": "All Logs",
+    "commands": "Commands",
+    "moderation": "Moderation",
+    "members": "Members",
+    "filter": "Apply Filter",
+    "loading": "Loading logs...",
+    "time": "Time",
+    "type": "Type",
+    "user": "User",
+    "content": "Content"
+  },
+  "theme": {
+    "dark": "Dark Mode"
+  },
+  "footer": {
+    "copyright": "© 2025 SOIV Studio, Palette Square Studio",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "legal": "Legal Notice"
+  }
+}

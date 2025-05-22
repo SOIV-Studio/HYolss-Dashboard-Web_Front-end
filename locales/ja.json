@@ -1,0 +1,86 @@
+{
+  "beta": {
+    "notice": "🚧 これはテスト中の開発バージョンです。一部の機能が動作しない場合があります。"
+  },
+  "dashboard": {
+    "title": "HYolss ダッシュボード"
+  },
+  "profile": {
+    "settings": "プロフィール設定"
+  },
+  "notification": {
+    "settings": "通知設定"
+  },
+  "common": {
+    "logout": "ログアウト"
+  },
+  "login": {
+    "message": "Discordでログインしてダッシュボードにアクセスしてください。",
+    "with": {
+      "discord": "Discordでログイン"
+    },
+    "remember": "次回から自動的にログイン"
+  },
+  "server": {
+    "select": "サーバーを選択",
+    "description": "ボットが招待されているサーバーから管理したいサーバーを選択してください。",
+    "loading": "サーバーリストを読み込み中...",
+    "none": "管理権限のあるサーバーがありません。",
+    "invite": "ボットを招待",
+    "error": "サーバーリストの読み込みに失敗しました。",
+    "retry": "再試行"
+  },
+  "nav": {
+    "overview": "概要",
+    "commands": "コマンド",
+    "settings": "設定",
+    "logs": "ログ"
+  },
+  "overview": {
+    "members": "メンバー数",
+    "commands": "コマンド使用量",
+    "features": "有効な機能",
+    "quick": "クイックアクション",
+    "welcome": "歓迎メッセージの設定",
+    "roles": "自動ロール管理",
+    "moderation": "モデレーションシステムの設定"
+  },
+  "commands": {
+    "title": "コマンド管理",
+    "loading": "コマンドリストを読み込み中..."
+  },
+  "settings": {
+    "title": "ボット設定",
+    "basic": "基本設定",
+    "prefix": "コマンドプレフィックス",
+    "language": "言語",
+    "features": "機能の有効化",
+    "welcome": "歓迎メッセージ",
+    "moderation": "モデレーションシステム",
+    "autorole": "自動ロール",
+    "logging": "ログ記録",
+    "save": "設定を保存"
+  },
+  "logs": {
+    "title": "ログ記録",
+    "all": "すべてのログ",
+    "commands": "コマンド",
+    "moderation": "モデレーション",
+    "members": "メンバー",
+    "filter": "フィルター適用",
+    "loading": "ログを読み込み中...",
+    "time": "時間",
+    "type": "タイプ",
+    "user": "ユーザー",
+    "content": "内容"
+  },
+  "theme": {
+    "dark": "ダークモード"
+  },
+  "footer": {
+    "copyright": "© 2025 SOIV Studio, Palette Square Studio",
+    "terms": "利用規約",
+    "privacy": "プライバシー",
+    "legal": "法的通知"
+  }
+}
