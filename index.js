@@ -49,15 +49,19 @@ document.addEventListener('DOMContentLoaded', function() {
   function setupProfileDropdown() {
     const userAvatar = document.getElementById('user-avatar');
     const profileDropdown = document.getElementById('profile-dropdown');
+    const logoutButton = document.getElementById('logout-button');
     
-    if (!userAvatar || !profileDropdown) {
+    if (!userAvatar || !profileDropdown || !logoutButton) {
       console.log('프로필 요소를 찾을 수 없습니다.');
       return;
     }
     
     // 기존 이벤트 리스너 제거 (중복 방지)
-    userAvatar.replaceWith(userAvatar.cloneNode(true));
-    const newUserAvatar = document.getElementById('user-avatar');
+    const newUserAvatar = userAvatar.cloneNode(true);
+    userAvatar.parentNode.replaceChild(newUserAvatar, userAvatar);
+    
+    const newLogoutButton = logoutButton.cloneNode(true);
+    logoutButton.parentNode.replaceChild(newLogoutButton, logoutButton);
     
     // 새로운 이벤트 리스너 추가
     newUserAvatar.addEventListener('click', function(e) {
@@ -65,11 +69,62 @@ document.addEventListener('DOMContentLoaded', function() {
       profileDropdown.style.display = profileDropdown.style.display === 'none' ? 'block' : 'none';
     });
     
+    // 로그아웃 버튼 이벤트 리스너 (한 번만 등록)
+    newLogoutButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      handleLogout();
+    });
+    
     // 드롭다운 외부 클릭 시 닫기
     document.addEventListener('click', function(e) {
-      if (!newUserAvatar.contains(e.target) && !profileDropdown.contains(e.target)) {
+      const currentUserAvatar = document.getElementById('user-avatar');
+      if (currentUserAvatar && !currentUserAvatar.contains(e.target) && !profileDropdown.contains(e.target)) {
         profileDropdown.style.display = 'none';
       }
+    });
+  }
+
+  // 로그아웃 처리 함수 (중복 실행 방지)
+  let isLoggingOut = false;
+  
+  function handleLogout() {
+    if (isLoggingOut) {
+      console.log('이미 로그아웃 진행 중입니다.');
+      return;
+    }
+    
+    isLoggingOut = true;
+    
+    // 로그아웃 API 호출
+    fetch(`${API_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+    .then(response => {
+      // 응답 상태와 상관없이 프론트엔드에서 로그아웃 처리
+      hideUserProfile();
+      
+      // 로컬 스토리지 정리 (필요한 경우)
+      if (!rememberLoginCheckbox.checked) {
+        localStorage.removeItem('authToken');
+      }
+      
+      // 페이지 새로고침
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error('로그아웃 오류:', error);
+      
+      // 오류가 발생해도 프론트엔드에서 로그아웃 처리
+      hideUserProfile();
+      
+      // 페이지 새로고침
+      window.location.reload();
+    })
+    .finally(() => {
+      // 로그아웃 상태 초기화
+      isLoggingOut = false;
     });
   }
 
@@ -98,21 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 500);
   });
   
-  // 프로필 아바타 클릭 시 드롭다운 토글
-  if (userAvatar) {
-    userAvatar.addEventListener('click', function(e) {
-      e.stopPropagation(); // 이벤트 버블링 방지
-      profileDropdown.classList.toggle('active');
-    });
-  }
-  
-  // 다른 곳 클릭 시 드롭다운 닫기
-  document.addEventListener('click', function() {
-    if (profileDropdown && profileDropdown.classList.contains('active')) {
-      profileDropdown.classList.remove('active');
-    }
-  });
-  
   // 로그아웃 함수에 이 코드 추가
   function hideUserProfile() {
     const userProfile = document.querySelector('.user-profile');
@@ -127,29 +167,6 @@ document.addEventListener('DOMContentLoaded', function() {
       profileDropdown.style.display = 'none';
     }
   }
-  
-  // 로그아웃 버튼 클릭 이벤트
-  logoutButton.addEventListener('click', function() {
-    // 서버의 로그아웃 엔드포인트로 이동
-    window.location.href = `${API_URL}/auth/logout`;
-  });
-
-  // 로그아웃 버튼 이벤트에서 호출
-  logoutButton.addEventListener('click', function() {
-    fetch(`${API_URL}/auth/logout`, {
-      method: 'POST',
-      credentials: 'include'
-    })
-    .then(() => {
-      hideUserProfile(); // 프로필 숨김
-      window.location.reload();
-    })
-    .catch(error => {
-      console.error('로그아웃 오류:', error);
-      hideUserProfile(); // 오류 시에도 프로필 숨김
-      window.location.reload();
-    });
-  });
   
   // 인증 상태 확인 함수
   function checkAuthStatus() {
