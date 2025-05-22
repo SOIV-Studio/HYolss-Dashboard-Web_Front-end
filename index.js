@@ -127,6 +127,12 @@ document.addEventListener('DOMContentLoaded', function() {
       profileDropdown.style.display = 'none';
     }
   }
+  
+  // 로그아웃 버튼 클릭 이벤트
+  logoutButton.addEventListener('click', function() {
+    // 서버의 로그아웃 엔드포인트로 이동
+    window.location.href = `${API_URL}/auth/logout`;
+  });
 
   // 로그아웃 버튼 이벤트에서 호출
   logoutButton.addEventListener('click', function() {
@@ -192,6 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
       userProfile.classList.add('active');
       userProfile.style.display = 'flex'; // CSS 클래스가 없을 경우 대비
     }
+
     // 사용자 이름 표시
     if (userName) {
       userName.textContent = user.username;
