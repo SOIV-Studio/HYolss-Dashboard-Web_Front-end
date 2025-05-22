@@ -50,19 +50,27 @@ document.addEventListener('DOMContentLoaded', function() {
     const userAvatar = document.getElementById('user-avatar');
     const profileDropdown = document.getElementById('profile-dropdown');
     
-    if (userAvatar && profileDropdown) {
-      userAvatar.addEventListener('click', function(e) {
-        e.stopPropagation(); // 이벤트 버블링 방지
-        profileDropdown.classList.toggle('active');
-      });
-      
-      // 다른 곳 클릭 시 드롭다운 닫기
-      document.addEventListener('click', function() {
-        if (profileDropdown.classList.contains('active')) {
-          profileDropdown.classList.remove('active');
-        }
-      });
+    if (!userAvatar || !profileDropdown) {
+      console.log('프로필 요소를 찾을 수 없습니다.');
+      return;
     }
+    
+    // 기존 이벤트 리스너 제거 (중복 방지)
+    userAvatar.replaceWith(userAvatar.cloneNode(true));
+    const newUserAvatar = document.getElementById('user-avatar');
+    
+    // 새로운 이벤트 리스너 추가
+    newUserAvatar.addEventListener('click', function(e) {
+      e.stopPropagation();
+      profileDropdown.style.display = profileDropdown.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    // 드롭다운 외부 클릭 시 닫기
+    document.addEventListener('click', function(e) {
+      if (!newUserAvatar.contains(e.target) && !profileDropdown.contains(e.target)) {
+        profileDropdown.style.display = 'none';
+      }
+    });
   }
 
   // 로그인 상태 체크
@@ -105,26 +113,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // 로그아웃 버튼 클릭 이벤트
+  // 로그아웃 함수에 이 코드 추가
+  function hideUserProfile() {
+    const userProfile = document.querySelector('.user-profile');
+    if (userProfile) {
+      userProfile.classList.remove('active');
+      userProfile.style.display = 'none';
+    }
+    
+    // 프로필 드롭다운도 숨김
+    const profileDropdown = document.getElementById('profile-dropdown');
+    if (profileDropdown) {
+      profileDropdown.style.display = 'none';
+    }
+  }
+
+  // 로그아웃 버튼 이벤트에서 호출
   logoutButton.addEventListener('click', function() {
-    // 서버의 로그아웃 엔드포인트로 이동
-    window.location.href = `${API_URL}/auth/logout`;
+    fetch(`${API_URL}/auth/logout`, {
+      method: 'POST',
+      credentials: 'include'
+    })
+    .then(() => {
+      hideUserProfile(); // 프로필 숨김
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error('로그아웃 오류:', error);
+      hideUserProfile(); // 오류 시에도 프로필 숨김
+      window.location.reload();
+    });
   });
   
   // 인증 상태 확인 함수
   function checkAuthStatus() {
-    // 자동 로그인이 체크되어 있는 경우에만 쿠키 확인
-    const rememberLogin = localStorage.getItem('rememberLogin') === 'true';
-    
-    if (!rememberLogin) {
-      // 자동 로그인이 체크되어 있지 않으면 로그인 화면 유지
-      return;
-    }
-
-    // 자동 로그인이 체크된 경우에만 쿠키가 있는지 확인하고 AJAX 요청 수행
+    // 항상 인증 상태 확인 (자동 로그인 체크와 상관없이)
     fetch(`${API_URL}/api/user`, {
       method: 'GET',
-      credentials: 'include' // 중요: 쿠키를 포함하여 요청
+      credentials: 'include'
     })
     .then(response => {
       if (!response.ok) {
@@ -133,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
       return response.json();
     })
     .then(data => {
-      // 사용자 정보가 있으면 서버 선택 화면 표시
       if (data.user) {
         showServerSelectionScreen();
         displayUserProfile(data.user);
@@ -141,7 +166,6 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .catch(error => {
       console.log('인증 상태 확인 오류:', error);
-      // 오류 발생 시 로그인 화면 유지
     });
   }
   
@@ -162,30 +186,42 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 사용자 프로필 표시 함수
   function displayUserProfile(user) {
+    // 프로필 컨테이너 표시
+    const userProfile = document.querySelector('.user-profile');
+    if (userProfile) {
+      userProfile.classList.add('active');
+      userProfile.style.display = 'flex'; // CSS 클래스가 없을 경우 대비
+    }
     // 사용자 이름 표시
-    userName.textContent = user.username;
+    if (userName) {
+      userName.textContent = user.username;
+    }
     
     // 아바타 표시
-    if (user.avatar) {
-      // Discord CDN에서 아바타 이미지 URL 생성
-      const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
-      // 기존 스타일 방식 대신 이미지 태그로 변경
-      userAvatar.innerHTML = `<img src="${avatarUrl}" alt="${user.username}">`;
-    } else {
-      // 기본 아바타 색상 (사용자 ID 기반)
-      const hue = parseInt(user.id) % 360;
-      userAvatar.style.backgroundColor = `hsl(${hue}, 60%, 60%)`;
-      
-      // 이니셜 표시
-      const initial = user.username.charAt(0).toUpperCase();
-      userAvatar.textContent = initial;
-      userAvatar.style.display = 'flex';
-      userAvatar.style.justifyContent = 'center';
-      userAvatar.style.alignItems = 'center';
-      userAvatar.style.color = 'white';
-      userAvatar.style.fontFamily = 'Pretendard, sans-serif';
-      userAvatar.style.fontWeight = 'bold';
+    if (userAvatar) {
+      if (user.avatar) {
+        // Discord CDN에서 아바타 이미지 URL 생성
+        const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+        userAvatar.innerHTML = `<img src="${avatarUrl}" alt="${user.username}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+      } else {
+        // 기본 아바타 색상 (사용자 ID 기반)
+        const hue = parseInt(user.id) % 360;
+        userAvatar.style.backgroundColor = `hsl(${hue}, 60%, 60%)`;
+        userAvatar.innerHTML = ''; // 기존 내용 제거
+        
+        // 이니셜 표시
+        const initial = user.username.charAt(0).toUpperCase();
+        userAvatar.textContent = initial;
+        userAvatar.style.display = 'flex';
+        userAvatar.style.justifyContent = 'center';
+        userAvatar.style.alignItems = 'center';
+        userAvatar.style.color = 'white';
+        userAvatar.style.fontFamily = 'Pretendard, sans-serif';
+        userAvatar.style.fontWeight = 'bold';
+        userAvatar.style.fontSize = '14px';
+      }
     }
+
     // 프로필 드롭다운 설정
     setupProfileDropdown();
   }
