@@ -467,9 +467,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
 
       // 확실히 로딩 해제
-      if (discordLoginButton) {
-        discordLoginButton.classList.remove('loading');
-      }
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
 
       resetToLoginState();
     });
