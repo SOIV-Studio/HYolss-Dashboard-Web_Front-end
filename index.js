@@ -466,9 +466,6 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('예상치 못한 오류:', error);
       }
 
-      // 확실히 로딩 해제
-      if (discordLoginButton) discordLoginButton.classList.remove('loading');
-
       resetToLoginState();
     });
   }
