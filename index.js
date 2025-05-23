@@ -417,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
-        'Expires': '0'
+        // 'Expires': '0'
       }
     })
     .then(response => {
