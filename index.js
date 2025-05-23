@@ -401,9 +401,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // 인증 상태 확인 함수 (개선된 버전)
+  // 인증 상태 확인 함수 (디버깅 강화)
   function checkAuthStatus() {
     console.log('인증 상태 확인 중...');
+    console.log('현재 쿠키:', document.cookie);
+    console.log('현재 도메인:', window.location.hostname);
+    console.log('API URL:', API_URL);
     
     // 강제로 캐시 무력화
     const timestamp = new Date().getTime();
@@ -419,10 +422,16 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => {
       console.log('인증 상태 응답:', response.status);
+      console.log('응답 헤더:', [...response.headers.entries()]);
       
       if (!response.ok) {
         if (response.status === 401) {
-          console.log('인증되지 않은 사용자');
+          console.log('인증되지 않은 사용자 - 세션/쿠키 문제일 가능성');
+          
+          // 쿠키 상태 상세 확인
+          const cookies = document.cookie.split(';').map(c => c.trim());
+          console.log('현재 쿠키 목록:', cookies);
+          
           throw new Error('UNAUTHORIZED');
         } else {
           throw new Error(`HTTP ${response.status}: 서버 오류`);
@@ -446,6 +455,9 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (error.message === 'UNAUTHORIZED') {
         console.log('로그인이 필요합니다');
+        
+        // 디버깅: 세션 테스트 요청
+        testSessionEndpoint();
       } else {
         console.error('예상치 못한 오류:', error);
       }
