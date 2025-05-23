@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // 로딩 상태 제거
       if (discordLoginButton) discordLoginButton.classList.remove('loading');
-      if (serverList) serverList.classList.remove('loading');
+      if (serverList) serverList.classList.remove('loading');  
       if (serverLoading) serverLoading.classList.add('hidden');
       
       console.log('로그인 상태로 리셋 완료');
@@ -464,6 +464,11 @@ document.addEventListener('DOMContentLoaded', function() {
         testSessionEndpoint();
       } else {
         console.error('예상치 못한 오류:', error);
+      }
+
+      // 확실히 로딩 해제
+      if (discordLoginButton) {
+        discordLoginButton.classList.remove('loading');
       }
 
       resetToLoginState();
