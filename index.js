@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 사용자 프로필 숨기기
       hideUserProfile();
       
-      // 로딩 상태 제거
+      // 모든 로딩 상태 제거
       if (discordLoginButton) discordLoginButton.classList.remove('loading');
       if (serverList) serverList.classList.remove('loading');  
       if (serverLoading) serverLoading.classList.add('hidden');
@@ -405,7 +405,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function checkAuthStatus() {
     console.log('인증 상태 확인 중...');
 
-    // 로딩 상태 표시 추가
+    // 로딩 상태 표시
     if (discordLoginButton) discordLoginButton.classList.add('loading');
 
     console.log('현재 쿠키:', document.cookie);
@@ -421,7 +421,6 @@ document.addEventListener('DOMContentLoaded', function() {
       headers: {
         'Cache-Control': 'no-cache, no-store, must-revalidate',
         'Pragma': 'no-cache',
-        // 'Expires': '0'
       }
     })
     .then(response => {
@@ -448,6 +447,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (data.user) {
         console.log('로그인된 사용자:', data.user.username);
+        // 인증 성공 시 로그인 버튼 로딩은 유지하고 서버 선택 화면으로 전환
         showServerSelectionScreen();
         displayUserProfile(data.user);
       } else {
@@ -466,6 +466,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('예상치 못한 오류:', error);
       }
 
+      // 인증 실패 시에만 로딩 상태 해제
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
       resetToLoginState();
     });
   }
@@ -483,16 +485,14 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 서버 선택 화면 표시 함수
   function showServerSelectionScreen() {
-    // 로그인 버튼 로딩 해제 (인증 성공)
-    if (discordLoginButton) discordLoginButton.classList.remove('loading');
-
+    // 인증은 성공했으므로 로그인 화면을 숨기고 서버 선택 화면 표시
     loginContainer.style.display = 'none';
     serverContainer.style.display = 'flex';
     
     // 헤더에 프로필 표시 스타일 적용
     headerFrame.classList.add('with-profile');
     
-    // 서버 목록 로딩 시작
+    // 서버 목록 로딩 시작 (로그인 버튼 로딩은 유지)
     serverList.classList.add('loading');
     
     // 서버 목록 가져오기
@@ -551,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     fetch(`${API_URL}/api/guilds`, {
       method: 'GET',
-      credentials: 'include' // 중요: 쿠키를 포함하여 요청
+      credentials: 'include'
     })
     .then(response => {
       console.log('서버 목록 응답:', response.status);
@@ -567,13 +567,14 @@ document.addEventListener('DOMContentLoaded', function() {
       // 서버 목록 표시
       displayServerList(data.guilds || []);
       
-      // 로딩 상태 제거
+      // 모든 로딩 상태 해제 (인증 + 서버 목록 로딩 완료)
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
       serverList.classList.remove('loading');
-      // 로딩 애니메이션 숨기기
       serverLoading.classList.add('hidden');
     })
     .catch(error => {
       console.error('서버 목록 가져오기 오류:', error);
+      
       // 오류 메시지 표시
       serverListContent.innerHTML = `
         <div class="error-message">
@@ -585,12 +586,16 @@ document.addEventListener('DOMContentLoaded', function() {
       // 다시 시도 버튼 이벤트 리스너
       const retryButton = document.querySelector('.retry-button');
       if (retryButton) {
-        retryButton.addEventListener('click', fetchServerList);
+        retryButton.addEventListener('click', () => {
+          // 다시 시도 시 로딩 상태 다시 활성화
+          serverList.classList.add('loading');
+          fetchServerList();
+        });
       }
       
-      // 로딩 상태 제거
+      // 서버 목록 로딩만 해제, 전체 로딩은 유지하지 않음
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
       serverList.classList.remove('loading');
-      // 로딩 애니메이션 확실히 숨기기
       serverLoading.classList.add('hidden');
     });
   }
