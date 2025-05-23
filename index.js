@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // 사용자 프로필 숨기기
       hideUserProfile();
       
-      // 로딩 상태 제거 - 확실히 처리
+      // 로딩 상태 제거
       if (discordLoginButton) discordLoginButton.classList.remove('loading');
       if (serverList) serverList.classList.remove('loading');
       if (serverLoading) serverLoading.classList.add('hidden');
@@ -406,10 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('인증 상태 확인 중...');
 
     // 로딩 상태 표시 추가
-    if (serverContainer) serverContainer.style.display = 'flex';
-    if (loginContainer) loginContainer.style.display = 'none';
-    if (serverList) serverList.classList.add('loading');
-    if (serverLoading) serverLoading.classList.remove('hidden');
+    if (discordLoginButton) discordLoginButton.classList.add('loading');
 
     console.log('현재 쿠키:', document.cookie);
     console.log('현재 도메인:', window.location.hostname);
