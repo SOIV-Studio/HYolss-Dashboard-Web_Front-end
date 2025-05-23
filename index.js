@@ -44,6 +44,34 @@ document.addEventListener('DOMContentLoaded', function() {
       localStorage.setItem('theme', 'light');
     }
   });
+
+  // URL 파라미터 확인 (OAuth 콜백 후 처리)
+  const urlParams = new URLSearchParams(window.location.search);
+  const authSuccess = urlParams.get('auth');
+  const error = urlParams.get('error');
+  
+  // URL 파라미터 정리 (히스토리 오염 방지)
+  if (authSuccess || error) {
+    // URL에서 파라미터 제거
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState({}, document.title, cleanUrl);
+    
+    if (error) {
+      console.error('인증 오류:', error);
+      alert('로그인 중 오류가 발생했습니다.');
+      resetToLoginState();
+      return;
+    }
+    
+    if (authSuccess === 'success') {
+      console.log('OAuth 콜백 성공, 사용자 정보 확인 중...');
+      // 약간의 지연 후 인증 상태 확인 (쿠키 설정 완료 대기)
+      setTimeout(() => {
+        checkAuthStatus();
+      }, 1000);
+      return;
+    }
+  }
   
   // DOM 요소 초기화 후 이벤트 리스너 등록
   function setupProfileDropdown() {
@@ -203,6 +231,30 @@ document.addEventListener('DOMContentLoaded', function() {
     isLoggingOut = false;
   }
 
+  // 로그인 상태로 리셋하는 함수
+  function resetToLoginState() {
+    try {
+      // UI 상태 리셋
+      if (loginContainer) loginContainer.style.display = 'flex';
+      if (serverContainer) serverContainer.style.display = 'none';
+      
+      // 헤더에서 프로필 표시 제거
+      if (headerFrame) headerFrame.classList.remove('with-profile');
+      
+      // 사용자 프로필 숨기기
+      hideUserProfile();
+      
+      // 로딩 상태 제거
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
+      if (serverList) serverList.classList.remove('loading');
+      if (serverLoading) serverLoading.classList.add('hidden');
+      
+      console.log('로그인 상태로 리셋 완료');
+    } catch (error) {
+      console.error('상태 리셋 오류:', error);
+    }
+  }
+
   // 개선된 쿠키 삭제 함수
   function clearAllCookies() {
     try {
@@ -215,7 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.hostname,
         `.${window.location.hostname}`,
         'bot-api.soiv-studio.xyz',
-        '.soiv-studio.xyz',
         '.soiv-studio.xyz',
         'localhost' // 개발 환경용
       ];
@@ -287,21 +338,13 @@ document.addEventListener('DOMContentLoaded', function() {
         sessionStorage.removeItem(key);
       });
       
-      // 추가: 전체 스토리지 초기화 (극단적 방법)
-      try {
-        localStorage.clear();
-        sessionStorage.clear();
-      } catch (e) {
-        console.warn('스토리지 전체 초기화 실패:', e);
-      }
-      
       console.log('로컬 데이터 정리 완료');
     } catch (error) {
       console.error('로컬 데이터 정리 오류:', error);
     }
   }
 
-  // 로그인 상태 체크
+  // 초기 로딩 시 인증 상태 확인
   checkAuthStatus();
   
   // 자동 로그인 설정 불러오기
@@ -358,8 +401,10 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
   
-  // 인증 상태 확인 함수
+  // 인증 상태 확인 함수 (개선된 버전)
   function checkAuthStatus() {
+    console.log('인증 상태 확인 중...');
+    
     // 강제로 캐시 무력화
     const timestamp = new Date().getTime();
     
@@ -373,13 +418,23 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     })
     .then(response => {
+      console.log('인증 상태 응답:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: 인증되지 않음`);
+        if (response.status === 401) {
+          console.log('인증되지 않은 사용자');
+          throw new Error('UNAUTHORIZED');
+        } else {
+          throw new Error(`HTTP ${response.status}: 서버 오류`);
+        }
       }
       return response.json();
     })
     .then(data => {
+      console.log('사용자 데이터:', data);
+      
       if (data.user) {
+        console.log('로그인된 사용자:', data.user.username);
         showServerSelectionScreen();
         displayUserProfile(data.user);
       } else {
@@ -387,7 +442,14 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     })
     .catch(error => {
-      console.log('인증 상태 확인 실패:', error);
+      console.log('인증 상태 확인 실패:', error.message);
+      
+      if (error.message === 'UNAUTHORIZED') {
+        console.log('로그인이 필요합니다');
+      } else {
+        console.error('예상치 못한 오류:', error);
+      }
+      
       resetToLoginState();
     });
   }
@@ -397,6 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 브라우저 뒤로가기/앞으로가기 캐시 방지
     window.addEventListener('pageshow', function(event) {
       if (event.persisted) {
+        console.log('페이지 캐시에서 복원됨, 새로고침 실행');
         window.location.reload();
       }
     });
@@ -462,6 +525,8 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 서버 목록 가져오기 함수
   function fetchServerList() {
+    console.log('서버 목록 가져오는 중...');
+    
     // 로딩 표시
     serverLoading.classList.remove('hidden');
     
@@ -470,14 +535,18 @@ document.addEventListener('DOMContentLoaded', function() {
       credentials: 'include' // 중요: 쿠키를 포함하여 요청
     })
     .then(response => {
+      console.log('서버 목록 응답:', response.status);
+      
       if (!response.ok) {
-        throw new Error('서버 목록을 가져오는데 실패했습니다');
+        throw new Error(`서버 목록 가져오기 실패: ${response.status}`);
       }
       return response.json();
     })
     .then(data => {
+      console.log('서버 목록 데이터:', data);
+      
       // 서버 목록 표시
-      displayServerList(data.guilds);
+      displayServerList(data.guilds || []);
       
       // 로딩 상태 제거
       serverList.classList.remove('loading');
@@ -495,7 +564,10 @@ document.addEventListener('DOMContentLoaded', function() {
       `;
       
       // 다시 시도 버튼 이벤트 리스너
-      document.querySelector('.retry-button').addEventListener('click', fetchServerList);
+      const retryButton = document.querySelector('.retry-button');
+      if (retryButton) {
+        retryButton.addEventListener('click', fetchServerList);
+      }
       
       // 로딩 상태 제거
       serverList.classList.remove('loading');
@@ -582,6 +654,6 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // 클라이언트 ID 가져오기 (실제로는 .env 파일 또는 설정에서 가져와야 함)
   function getClientId() {
-    return '888061096441819166'; // 이 부분은 실제 Discord 애플리케이션 ID로 대체해야 함
+    return '888061096441819166'; // 실제 클라이언트 ID로 변경
   }
 });
