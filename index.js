@@ -234,6 +234,14 @@ document.addEventListener('DOMContentLoaded', function() {
   // 로그인 상태로 리셋하는 함수
   function resetToLoginState() {
     try {
+      // 가장 먼저 모든 로딩 상태 제거
+      if (discordLoginButton) {
+        discordLoginButton.classList.remove('loading');
+        console.log('로그인 버튼 로딩 해제됨');
+      }
+      if (serverList) serverList.classList.remove('loading');  
+      if (serverLoading) serverLoading.classList.add('hidden');
+      
       // UI 상태 리셋
       if (loginContainer) loginContainer.style.display = 'flex';
       if (serverContainer) serverContainer.style.display = 'none';
@@ -244,14 +252,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // 사용자 프로필 숨기기
       hideUserProfile();
       
-      // 모든 로딩 상태 제거
-      if (discordLoginButton) discordLoginButton.classList.remove('loading');
-      if (serverList) serverList.classList.remove('loading');  
-      if (serverLoading) serverLoading.classList.add('hidden');
-      
       console.log('로그인 상태로 리셋 완료');
     } catch (error) {
       console.error('상태 리셋 오류:', error);
+      // 오류가 발생해도 최소한 로딩은 해제
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
     }
   }
 
@@ -457,17 +462,15 @@ document.addEventListener('DOMContentLoaded', function() {
     .catch(error => {
       console.log('인증 상태 확인 실패:', error.message);
       
+      // 인증 실패 시 즉시 로딩 상태 해제
+      if (discordLoginButton) discordLoginButton.classList.remove('loading');
+      
       if (error.message === 'UNAUTHORIZED') {
         console.log('로그인이 필요합니다');
-        
-        // 디버깅: 세션 테스트 요청
-        testSessionEndpoint();
       } else {
         console.error('예상치 못한 오류:', error);
       }
 
-      // 인증 실패 시에만 로딩 상태 해제
-      if (discordLoginButton) discordLoginButton.classList.remove('loading');
       resetToLoginState();
     });
   }
