@@ -78,9 +78,10 @@
     "dark": "Dark Mode"
   },
   "footer": {
-    "copyright": "© 2025 SOIV Studio, Palette Square Studio",
+    "copyright": "© 2020 ~ 2025 SOIV Studio, Palette Square Studio",
     "terms": "Terms",
     "privacy": "Privacy",
-    "legal": "Legal Notice"
+    "legal": "Legal Notice",
+    "licenses": "Licenses"
   }
 }
