@@ -8,7 +8,7 @@
     "start": "live-server",
     "build:css": "echo 'Using Tailwind CSS CDN'",
     "watch:css": "echo 'Using Tailwind CSS CDN'",
-    "build": "cross-env NODE_ENV=production npx mkdirp dist && npx cpy index.html index.js dashboard.js style/* locales/* Assets/* dist"
+    "build": "cross-env NODE_ENV=production npx mkdirp dist && npx cpy index.html index.js dashboard.js style/* locales/* Assets/* easter-egg.html dist"
   },
   "repository": {
     "type": "git",
